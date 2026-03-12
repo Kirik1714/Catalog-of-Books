@@ -1,11 +1,17 @@
+import { getFavorites } from "../services/storage.js";
+
 export function createBookCard(book) {
-  
+  const isFavorite = getFavorites().find((f) => f.id === book.id);
+  const heartIcon = isFavorite
+    ? "/assets/icons/heartRed.svg"
+    : "/assets/icons/heart.svg";
+
   return `
     <article class="book-card">
       <div class="book-card-header">
-        <img src="${book.coverUrl || '/assets/placeholder.svg'}" alt="${book.title}" class="book-cover">
+        <img src="${book.coverUrl || "/assets/placeholder.svg"}" alt="${book.title}" class="book-cover">
         <button class="favorite-btn" data-id="${book.id}">
-          <img src="/assets/icons/Heart.svg" alt="Favorite">
+          <img src="${heartIcon}" alt="Favorite">
         </button>
       </div>
       <div class="book-info">
@@ -18,8 +24,7 @@ export function createBookCard(book) {
 }
 
 export function createFavoriteCard(book) {
-  
-  const coverHtml = book.coverUrl 
+  const coverHtml = book.coverUrl
     ? `<img src="${book.coverUrl}" alt="${book.title}" class="fav-book-cover">`
     : `<div class="fav-book-placeholder">N/A</div>`;
 
@@ -33,7 +38,7 @@ export function createFavoriteCard(book) {
         <p class="fav-book-author">${book.author}</p>
         <span class="fav-book-year">${book.year}</span>
       </div>
-      <button class="remove-fav-btn" title="Remove from favorites">
+      <button class="remove-fav-btn" data-id="${book.id}" title="Remove from favorites">
         <img src="/assets/icons/heartRed.svg" alt="Remove">
       </button>
     </div>

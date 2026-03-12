@@ -80,7 +80,7 @@ body {
 
 
 .container {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 40px;
 }
@@ -253,7 +253,7 @@ main {
 
 /*Favorite books*/
 .favorite-books {
-flex: 0 0 230px; 
+flex: 0 0 250px; 
   background-color: white;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
@@ -420,4 +420,40 @@ margin-top: 20px  ;
 }
 .footer-link{
   color: #345648;
+}
+/*Loading*/
+.loading-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px; /* Чтобы спиннер был по центру */
+  grid-column: 1 / -1; /* Если внутри grid, растянуть на все колонки */
+}
+.status-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #666;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #345648;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.is-hidden {
+  display: none !important;
 }
