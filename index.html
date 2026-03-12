@@ -36,20 +36,38 @@
 
 
     <main class="container">
-      <div class="main-container">
 
-        <section class="hero-section">
-          <h1 class="hero-section-title" >Discover Your Next Great Read</h1>
-          <p class="hero-section-description">Search millions of books, build your personal library, and never lose track of what to read next.</p>
-          <div id="search-component-root"></div>
-        </section>
-      </div>
+
+      <section class="hero-section">
+        <h1 class="hero-section-title">Discover Your Next Great Read</h1>
+        <p class="hero-section-description">Search millions of books, build your personal library, and never lose track
+          of what to read next.</p>
+        <div id="search-component-root"></div>
+      </section>
+      <section class="main-section">
+        <div id="books-grid" class="books-grid"></div>
+        <div class="favorite-books">
+          <div class="favorite-books-header">
+            <span class="favorite-books-icon">
+              <img src="/assets/icons/heart.svg" class="favorite-icon" alt="Favorite icon">
+            </span>
+            <div class="favorite-header-text">
+              <h5 class="favorite-title">Favorites</h5>
+              <p class="favorite-count">3 books saved</p>
+            </div>
+          </div>
+          <div id="books-favorite" class="books-favorite-list"></div>
+        </div>
+
+
+      </section>
+
 
     </main>
 
     <footer class="footer">
       <div class="container">
-        dgs
+        <p>Powered by <a href="https://openlibrary.org/" target="_blank" class="footer-link">Open Library</a></p>
       </div>
 
 
