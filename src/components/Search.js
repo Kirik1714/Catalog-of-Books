@@ -1,5 +1,8 @@
-export function mountSearch(selector) {
+
+import { debounce } from "../utils/debounce";
+export function mountSearch(selector, onSearch,onMounted) {
   const root = document.querySelector(selector);
+  const grid = document.querySelector("#books-grid");
   if (!root) return;
 
   root.innerHTML = `
@@ -11,16 +14,29 @@ export function mountSearch(selector) {
   <button type="submit" id="search-btn">Search</button>
 </form>
   `;
+    if (onMounted) {
+    onMounted();
+  }
 
-  // Логика обработки формы
+
   const form = root.querySelector('.search-box');
   const input = root.querySelector('#search-input');
+  const debouncedSearch = debounce((query) => {
+    if (onSearch) {
+      onSearch(query);
+    }
+  }, 1000); 
+  input.addEventListener('input', (e) => {
+    const query = e.target.value.trim();
+    debouncedSearch(query);
+  });
 
-  form.addEventListener('submit', (e) => {
+ form.addEventListener('submit', (e) => {
     e.preventDefault();
     const query = input.value.trim();
-    if (query) {
-      console.log('Поиск:', query);
-    }
+   if (onSearch) {
+    onSearch(query); 
+  }
+
   });
 }

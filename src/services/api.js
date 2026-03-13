@@ -1,7 +1,7 @@
-export async function fetchDefaultBooks() {
+export async function fetchDefaultBooks(query ='best books') {
 
-  const response = await fetch(`https://openlibrary.org/search.json?q=best+books&limit=10`);
+  const searchQuery = query.replace(/\s+/g, '+');
+  const response = await fetch(`https://openlibrary.org/search.json?q=${searchQuery}&limit=10`);
   const data = await response.json();
-  console.log(data.docs)
   return data.docs;
 }

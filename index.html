@@ -29,6 +29,7 @@
               <h4 class="logo-text-description">Discover your next favorite book</span>
           </div>
         </div>
+        <div id="theme-toggle-root"></div>
       </div>
 
 
@@ -42,7 +43,17 @@
         <h1 class="hero-section-title">Discover Your Next Great Read</h1>
         <p class="hero-section-description">Search millions of books, build your personal library, and never lose track
           of what to read next.</p>
-        <div id="search-component-root"></div>
+        <div id="search-component-root" class="search-placeholder"></div>
+        <div id="search-skeleton" class="search-skeleton">
+          <div class="skeleton-input"></div>
+          <div class="skeleton-button"></div>
+        </div>
+        <div class="filter-box">
+          <label for="author-select" class="filter-label">Фильтр по автору:</label>
+          <select id="author-select" class="custom-select">
+            <option value="">Все авторы</option>
+          </select>
+        </div>
       </section>
       <section class="main-section">
         <div id="books-grid" class="books-grid"></div>
