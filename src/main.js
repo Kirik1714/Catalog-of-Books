@@ -93,10 +93,10 @@ document.querySelector("#books-grid").addEventListener("click", (event) => {
 
   if (isFav) {
     removeFavorite(book.id);
-    btn.querySelector("img").src = "/assets/icons/heart.svg";
+    btn.querySelector("img").src = "assets/heart.svg";
   } else {
     saveFavorite(book);
-    btn.querySelector("img").src = "/assets/icons/heartRed.svg";
+    btn.querySelector("img").src = "assets/heartRed.svg";
   }
 
   renderFavorites(getFavorites());
