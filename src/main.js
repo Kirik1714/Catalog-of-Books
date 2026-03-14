@@ -18,12 +18,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
   mountThemeToggle("#theme-toggle-root");
 
-
   mountSearch("#search-component-root", handleSearch, () => {
     const skeleton = document.getElementById("search-skeleton");
     if (skeleton) skeleton.classList.add("skeleton-hidden");
   });
 
+  
  
 
   renderFavorites(getFavorites());
