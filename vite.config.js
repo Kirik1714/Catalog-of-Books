@@ -4,18 +4,15 @@ export default defineConfig({
   base: './', 
   build: {
     outDir: 'dist',
-    assetsInlineLimit: 0, 
     rollupOptions: {
       output: {
-        entryFileNames: `[name].js`,
-        chunkFileNames: `[name].js`,
         assetFileNames: (assetInfo) => {
-      
+          if (assetInfo.name.includes('icons/')) {
+             return 'assets/[name][extname]'; 
+          }
           return 'assets/[name][extname]';
         },
-        manualChunks: undefined,
-      },
-      inlineDynamicImports: true,
+      }
     }
   }
 });
