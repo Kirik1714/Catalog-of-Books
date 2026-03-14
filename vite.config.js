@@ -9,8 +9,13 @@ export default defineConfig({
       output: {
         entryFileNames: `[name].js`,
         chunkFileNames: `[name].js`,
-        assetFileNames: `assets/[name].[ext]`
-      }
+        assetFileNames: (assetInfo) => {
+      
+          return 'assets/[name][extname]';
+        },
+        manualChunks: undefined,
+      },
+      inlineDynamicImports: true,
     }
   }
 });
