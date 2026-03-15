@@ -1,10 +1,8 @@
-import { getFavorites } from "../services/storage.js";
+import { ICONS } from "../constants/index.js";
 
 export function createBookCard(book) {
-  const isFavorite = getFavorites().find((f) => f.id === book.id);
-  const heartIcon = isFavorite
-    ? "/assets/icons/heartRed.svg"
-    : "/assets/icons/heart.svg";
+  
+ const heartIcon = book.isFavorite ? ICONS.HEART_RED : ICONS.HEART;
 
   return `
     <article class="book-card">

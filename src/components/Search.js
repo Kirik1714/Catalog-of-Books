@@ -1,4 +1,5 @@
 
+import { ICONS } from "../constants";
 import { debounce } from "../utils/debounce";
 export function mountSearch(selector, onSearch,onMounted) {
   const root = document.querySelector(selector);
@@ -8,7 +9,7 @@ export function mountSearch(selector, onSearch,onMounted) {
   root.innerHTML = `
    <form class="search-box">
   <div class="input-wrapper">
-    <img src="/assets/icons/search.svg" class="search-icon" alt="icon">
+    <img src="${ICONS.SEARCH}" class="search-icon" alt="icon">
     <input type="text" id="search-input" placeholder="Search for books by title or author...">
   </div>
   <button type="submit" id="search-btn">Search</button>

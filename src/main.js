@@ -9,6 +9,7 @@ import {
 } from "./services/storage.js";
 import { initTheme } from "./services/theme.js";
 import { mountThemeToggle } from "./components/ThemeToggle.js";
+import { ICONS, MESSAGES } from "./constants/index.js";
 
 let currentBooks = [];
 let allFetchedBooks = [];
@@ -25,7 +26,8 @@ const elements = {
 // First render page
 document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
-  mountThemeToggle("#theme-toggle-root");
+  const themeRoot = document.querySelector("#theme-toggle-root");
+  mountThemeToggle(themeRoot);
 
   mountSearch("#search-component-root", handleSearch, () => {
     const skeleton = document.getElementById("search-skeleton");
@@ -57,7 +59,7 @@ async function handleSearch(query) {
       errorDiv.className = "status-message status-error";
       
       const p = document.createElement("p");
-      p.textContent = `По запросу "${searchQuery}" ничего не найдено.`;
+      p.textContent = MESSAGES.SEARCH_EMPTY(searchQuery);;
       
       errorDiv.appendChild(p);
       elements.grid.appendChild(errorDiv);
@@ -77,7 +79,7 @@ async function handleSearch(query) {
     renderBooks(currentBooks);
     updateAuthorFilter(currentBooks);
   } catch (error) {
-    elements.grid.innerHTML = `<div class="status-message"><p>Произошла ошибка при загрузке. Проверьте соединение с интернетом.</p></div>`;
+    elements.grid.innerHTML = `<div class="status-message"><p>${MESSAGES.ERROR}</p></div>`;
     console.error("Search error:", error);
   }
 }
@@ -97,10 +99,10 @@ if (elements.grid) {
 
     if (isFav) {
       removeFavorite(book.id);
-      btn.querySelector("img").src = "/assets/icons/heart.svg";
+      btn.querySelector("img").src = ICONS.HEART;
     } else {
       saveFavorite(book);
-      btn.querySelector("img").src = "/assets/icons/heartRed.svg";
+      btn.querySelector("img").src = ICONS.HEART_RED;
     }
     renderFavorites(getFavorites());
   });
@@ -109,10 +111,11 @@ if (elements.grid) {
 // Render list of books
 export function renderBooks(books) {
 if (!elements.grid) return;
+
 elements.grid.innerHTML = "";
 
   if (books.length === 0) {
-    elements.grid.innerHTML = "<p>Книги не найдены.</p>";
+    elements.grid.innerHTML = MESSAGES.NOT_FOUND;
     return;
   }
 

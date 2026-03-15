@@ -15,7 +15,6 @@ This project uses **Vite**. Follow these steps to run the application:
 3. **Build for production:**
    ```bash
     npm run build
-    
 *The optimized files will be generated in the dist folder.*
 
 ## Project Structure
@@ -33,6 +32,8 @@ The project is organized to separate business logic, UI components, and assets.
     * services/ — Data logic: api.js (API), storage.js (localStorage), theme.js
 
     * utils/ — Utility functions: debounce.js (search optimization)
+  
+    * constants/ — Centralized application configuration (icons and messages).
 
     * main.js — Entry point of the application
 
