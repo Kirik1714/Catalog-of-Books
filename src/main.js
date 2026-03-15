@@ -13,7 +13,16 @@ import { mountThemeToggle } from "./components/ThemeToggle.js";
 let currentBooks = [];
 let allFetchedBooks = [];
 
-// first render page
+// Cache DOM elements to avoid repeated lookups
+const elements = {
+  grid: document.querySelector("#books-grid"),
+  favoriteList: document.querySelector("#books-favorite"),
+  authorSelect: document.querySelector("#author-select"),
+  countLabel: document.querySelector(".favorite-count"),
+  searchRoot: document.querySelector("#search-component-root"),
+};
+
+// First render page
 document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
   mountThemeToggle("#theme-toggle-root");
@@ -23,22 +32,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (skeleton) skeleton.classList.add("skeleton-hidden");
   });
 
-  
- 
-
   renderFavorites(getFavorites());
   await handleSearch("best books");
 });
 
-// request for work with search
+// Request for work with search
 async function handleSearch(query) {
-  const grid = document.querySelector("#books-grid");
-
+  if (!elements.grid) return;
  
   const searchQuery = (!query || query.trim() === "") ? "best books" : query.trim();
 
-  grid.innerHTML = createLoadingState();
-
+  elements.grid.innerHTML = createLoadingState();
   try {
     const booksArray = await fetchDefaultBooks(searchQuery);
 
@@ -46,8 +50,9 @@ async function handleSearch(query) {
     if (!booksArray || booksArray.length === 0) {
       currentBooks = [];
       allFetchedBooks = [];
-     // Use textContent to prevent XSS attacks
-      grid.innerHTML = ""; 
+
+      // Use textContent to prevent XSS attacks
+      elements.grid.innerHTML = "";
       const errorDiv = document.createElement("div");
       errorDiv.className = "status-message status-error";
       
@@ -55,7 +60,7 @@ async function handleSearch(query) {
       p.textContent = `По запросу "${searchQuery}" ничего не найдено.`;
       
       errorDiv.appendChild(p);
-      grid.appendChild(errorDiv);
+      elements.grid.appendChild(errorDiv);
       return;
     }
 
@@ -72,42 +77,42 @@ async function handleSearch(query) {
     renderBooks(currentBooks);
     updateAuthorFilter(currentBooks);
   } catch (error) {
-    grid.innerHTML = `<div class="status-message"><p>Произошла ошибка при загрузке. Проверьте соединение с интернетом.</p></div>`;
+    elements.grid.innerHTML = `<div class="status-message"><p>Произошла ошибка при загрузке. Проверьте соединение с интернетом.</p></div>`;
     console.error("Search error:", error);
   }
 }
 
-// listiner to add favorite book
-document.querySelector("#books-grid").addEventListener("click", (event) => {
-  const btn = event.target.closest(".favorite-btn");
-  if (!btn) return;
+// Listiner to add favorite book
+if (elements.grid) {
+  elements.grid.addEventListener("click", (event) => {
+    const btn = event.target.closest(".favorite-btn");
+    if (!btn) return;
 
-  const bookId = btn.dataset.id;
-  const book = currentBooks.find((b) => b.id === bookId);
+    const bookId = btn.dataset.id;
+    const book = currentBooks.find((b) => b.id === bookId);
+    if (!book) return;
 
-  if (!book) return;
+    const favorites = getFavorites();
+    const isFav = favorites.find((f) => f.id === book.id);
 
-  const favorites = getFavorites();
-  const isFav = favorites.find((f) => f.id === book.id);
+    if (isFav) {
+      removeFavorite(book.id);
+      btn.querySelector("img").src = "/assets/icons/heart.svg";
+    } else {
+      saveFavorite(book);
+      btn.querySelector("img").src = "/assets/icons/heartRed.svg";
+    }
+    renderFavorites(getFavorites());
+  });
+}
 
-  if (isFav) {
-    removeFavorite(book.id);
-    btn.querySelector("img").src = "/assets/icons/heart.svg";
-  } else {
-    saveFavorite(book);
-    btn.querySelector("img").src = "/assets/icons/heartRed.svg";
-  }
-
-  renderFavorites(getFavorites());
-});
-
-// render list of books
+// Render list of books
 export function renderBooks(books) {
-  const grid = document.querySelector("#books-grid");
-  grid.innerHTML = "";
+if (!elements.grid) return;
+elements.grid.innerHTML = "";
 
   if (books.length === 0) {
-    grid.innerHTML = "<p>Книги не найдены.</p>";
+    elements.grid.innerHTML = "<p>Книги не найдены.</p>";
     return;
   }
 
@@ -119,44 +124,39 @@ export function renderBooks(books) {
 
     const cardHTML = createBookCard(bookWithStatus);
 
-    grid.insertAdjacentHTML("beforeend", cardHTML);
+    elements.grid.insertAdjacentHTML("beforeend", cardHTML);
   });
 }
 
 // Render favorites books
 export function renderFavorites(favBooks) {
-  const favList = document.querySelector("#books-favorite");
-  const countLabel = document.querySelector(".favorite-count");
+ if (!elements.favoriteList || !elements.countLabel) return;
 
-  if (!favList) return;
+ elements.favoriteList.innerHTML = "";
+  elements.countLabel.textContent = `${favBooks.length} books saved`;
 
-  favList.innerHTML = "";
-  countLabel.textContent = `${favBooks.length} books saved`;
-
-  favBooks.forEach((book) => {
-    favList.insertAdjacentHTML("beforeend", createFavoriteCard(book));
+ favBooks.forEach((book) => {
+    elements.favoriteList.insertAdjacentHTML("beforeend", createFavoriteCard(book));
   });
 }
 
-//Listener to remove book from favorites
-document.querySelector("#books-favorite").addEventListener("click", (event) => {
-  const btn = event.target.closest(".remove-fav-btn");
-  if (!btn) return;
+// Listener to remove book from favorites
+if (elements.favoriteList) {
+    elements.favoriteList.addEventListener("click", (event) => {
+    const btn = event.target.closest(".remove-fav-btn");
+    if (!btn) return;
 
-  const bookId = btn.dataset.id;
-  removeFavorite(bookId); // Удаляем из localStorage
+    removeFavorite(btn.dataset.id);
+    renderFavorites(getFavorites());
+    renderBooks(currentBooks);
+  });
+}
 
-  // Updates lists:
-  renderFavorites(getFavorites());
-
-  renderBooks(currentBooks);
-});
-
-// get unique author
+// Get unique author
 function updateAuthorFilter(books) {
-  const select = document.querySelector("#author-select");
+if (!elements.authorSelect) return;
 
-  select.innerHTML = '<option value="">Все авторы</option>';
+  elements.authorSelect.innerHTML = '<option value="">Все авторы</option>';
 
   const authors = [
     ...new Set(books.map((b) => b.author).filter((a) => a !== "Неизвестен")),
@@ -166,19 +166,15 @@ function updateAuthorFilter(books) {
     const option = document.createElement("option");
     option.value = author;
     option.textContent = author;
-    select.appendChild(option);
+     elements.authorSelect.appendChild(option);
   });
 }
 
-// listener for get author
-
-document.querySelector("#author-select").addEventListener("change", (e) => {
-  const selectedAuthor = e.target.value;
-
-  if (selectedAuthor === "") {
-    renderBooks(allFetchedBooks); 
-  } else {
-    const filtered = allFetchedBooks.filter((b) => b.author === selectedAuthor);
+// Listener for get author
+if (elements.authorSelect) {
+  elements.authorSelect.addEventListener("change", (e) => {
+    const selectedAuthor = e.target.value;
+    const filtered = selectedAuthor === "" ? allFetchedBooks : allFetchedBooks.filter((b) => b.author === selectedAuthor);
     renderBooks(filtered);
-  }
-});
+  });
+}
