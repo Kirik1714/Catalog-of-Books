@@ -32,8 +32,6 @@ The project is organized to separate business logic, UI components, and assets.
 
     * services/ — Data logic: api.js (API), storage.js (localStorage), theme.js
 
-    * state/ — Application state management (theme persistence)
-
     * utils/ — Utility functions: debounce.js (search optimization)
 
     * main.js — Entry point of the application

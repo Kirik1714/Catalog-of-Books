@@ -34,29 +34,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function handleSearch(query) {
   const grid = document.querySelector("#books-grid");
 
-  // Проверка на пустой ввод согласно требованию
-  if (!query || query.trim() === "") {
-   
-    grid.innerHTML = `
-      <div class="status-message">
-        <p>Пожалуйста, введите название книги или автора для поиска.</p>
-      </div>`;
-    return;
-  }
+ 
+  const searchQuery = (!query || query.trim() === "") ? "best books" : query.trim();
 
   grid.innerHTML = createLoadingState();
 
   try {
-    const booksArray = await fetchDefaultBooks(query);
+    const booksArray = await fetchDefaultBooks(searchQuery);
 
     // API return void array
     if (!booksArray || booksArray.length === 0) {
       currentBooks = [];
       allFetchedBooks = [];
-      grid.innerHTML = `<div class="status-message status-error input.addEventListener('input', (e) => {
-    const query = e.target.value.trim();
-    debouncedSearch(query);
-  });"><p>По запросу "${query}" ничего не найдено.</p></div>`;
+     // Use textContent to prevent XSS attacks
+      grid.innerHTML = ""; 
+      const errorDiv = document.createElement("div");
+      errorDiv.className = "status-message status-error";
+      
+      const p = document.createElement("p");
+      p.textContent = `По запросу "${searchQuery}" ничего не найдено.`;
+      
+      errorDiv.appendChild(p);
+      grid.appendChild(errorDiv);
       return;
     }
 
@@ -157,15 +156,12 @@ document.querySelector("#books-favorite").addEventListener("click", (event) => {
 function updateAuthorFilter(books) {
   const select = document.querySelector("#author-select");
 
-  // Очищаем старые опции (кроме первой "Все авторы")
   select.innerHTML = '<option value="">Все авторы</option>';
 
-  // Собираем уникальных авторов (Set удаляет дубликаты)
   const authors = [
     ...new Set(books.map((b) => b.author).filter((a) => a !== "Неизвестен")),
   ];
 
-  // Добавляем их в список
   authors.sort().forEach((author) => {
     const option = document.createElement("option");
     option.value = author;
@@ -180,7 +176,7 @@ document.querySelector("#author-select").addEventListener("change", (e) => {
   const selectedAuthor = e.target.value;
 
   if (selectedAuthor === "") {
-    renderBooks(allFetchedBooks); // Показываем все
+    renderBooks(allFetchedBooks); 
   } else {
     const filtered = allFetchedBooks.filter((b) => b.author === selectedAuthor);
     renderBooks(filtered);

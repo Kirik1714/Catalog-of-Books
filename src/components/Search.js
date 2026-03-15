@@ -2,7 +2,7 @@
 import { debounce } from "../utils/debounce";
 export function mountSearch(selector, onSearch,onMounted) {
   const root = document.querySelector(selector);
-  const grid = document.querySelector("#books-grid");
+
   if (!root) return;
 
   root.innerHTML = `

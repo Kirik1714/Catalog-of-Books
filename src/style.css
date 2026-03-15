@@ -418,12 +418,10 @@ main {
   border: 1px solid var(--border-color);
   border-radius: 12px;
 
-  /* Фишка для скролла: */
+  /* For scroll: */
   position: sticky;
   top: 20px;
-  /* Прилипает к верху при скролле всей страницы */
   max-height: calc(100vh - 40px);
-  /* Высота не больше экрана */
   display: flex;
   flex-direction: column;
 
